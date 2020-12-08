@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -35,13 +36,14 @@ namespace Demo.Cli
                     .AddColumn(new TableColumn("Start time"))
                     .AddColumn(new TableColumn("End time"))
                     .AddColumn(new TableColumn("Queue time"));
-                foreach (var build in buildModel.List)
+                foreach (var build in buildModel.List.OrderByDescending(d => d.FinishTime))
                 {
                     buildRepresentation.AddRow(build.Status, build.Queue?.Name ?? "No data",
                         build.StartTime.ToString(CultureInfo.InvariantCulture),
                         build.FinishTime.ToString(CultureInfo.InvariantCulture),
                         build.QueueTime.ToString(CultureInfo.InvariantCulture));
                 }
+
                 AnsiConsole.Render(buildRepresentation);
             }
             catch (Exception e)

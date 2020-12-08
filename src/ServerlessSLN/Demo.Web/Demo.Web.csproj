@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.15.0" />        
+        <PackageReference Include="Microsoft.Azure.SignalR" Version="1.5.1" />
+        <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />        
+        <PackageReference Include="toastr" Version="2.1.1" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Demo.Interfaces\Demo.Interfaces.csproj" />
+      <ProjectReference Include="..\Demo.Services\Demo.Services.csproj" />
+    </ItemGroup>
+</Project>

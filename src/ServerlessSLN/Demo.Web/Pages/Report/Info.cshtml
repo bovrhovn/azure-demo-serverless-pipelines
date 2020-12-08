@@ -1,0 +1,66 @@
+@page
+@model InfoPageModel
+
+@{
+    ViewData["Title"] = "Status page";
+}
+
+<h1>
+    When build is finished, you should see result in realtime here with report link
+</h1>
+<div class="col-md-12 mb-2">
+    <button class="btn btn-danger float-right"
+            id="btnClear">
+    </button>
+</div>
+<div class="row">
+    <div class="col-md-12"
+         id="messages">
+    </div>
+</div>
+¨
+
+@section Scripts
+{
+    <script src="~/js/signalr.min.js"
+            type="application/javascript"></script>
+    <script type="application/javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+                const statsConnection = new signalR.HubConnectionBuilder()
+                            .withUrl('https://demo-serverless-func.azurewebsites.net/api')
+                            .build();
+                bindConnectionMessage(statsConnection);
+                statsConnection.start()
+                          .then(() => onConnected(statsConnection))
+                          .catch(console.error);
+                
+                $("#btnClear").click(function (event) {
+                                $("#messages").empty();
+                                event.preventDefault();
+                });
+                
+                function createMessageEntry(encodedMsg) {
+                                let entry = document.createElement('div');                            
+                                entry.innerHTML = '<div class="col-md-12 shadow-sm p-3 mb-5 bg-white rounded pull-left">' +
+                                  + encodedMsg +'</div>';                          
+                                return entry;
+                            }
+                
+                function bindConnectionMessage(connection) {
+                      let messageCallback = function (message) {
+                                    if (!message) return;                                
+                                    let messageEntry = createMessageEntry(message);
+                                    let messageBox = document.getElementById('messages');
+                                    messageBox.appendChild(messageEntry);
+                                    messageBox.scrollTop = messageBox.scrollHeight;
+                      };
+                      connection.on('stats', messageCallback); 
+                }
+                                
+                function onConnected(connection) {
+                        console.log('connection started');
+                        connection.send('messages', 'Connected to Azure SignalR service for report retrieving');                                          
+                }
+            });
+    </script>
+}

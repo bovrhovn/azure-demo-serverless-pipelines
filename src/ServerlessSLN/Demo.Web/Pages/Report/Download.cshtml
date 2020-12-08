@@ -1,0 +1,28 @@
+@page
+@model DownloadPageModel
+
+@{
+    ViewData["Title"] = "Download report";
+}
+
+<h1>
+    Use below table and download status report
+</h1>
+
+<table class="table table-hover">
+    <tr>
+        <td>
+            Name
+        </td>
+        <td>Download</td>
+    </tr>
+    @foreach (var report in Model.Reports)
+    {
+        <tr>
+            <td>@report.Name</td>
+            <td>
+                <a href="@report.Url" target="_blank"><i class="fas fa-download"></i></a>
+            </td>
+        </tr>
+    }
+</table>
