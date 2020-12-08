@@ -5,12 +5,13 @@
     ViewData["Title"] = "Status page";
 }
 
-<h1>
+<h3>
     When build is finished, you should see result in realtime here with report link
-</h1>
+</h3>
 <div class="col-md-12 mb-2">
-    <button class="btn btn-danger float-right"
+    <button class="btn btn-info float-right"
             id="btnClear">
+        Clear messages
     </button>
 </div>
 <div class="row">
@@ -18,7 +19,6 @@
          id="messages">
     </div>
 </div>
-¨
 
 @section Scripts
 {
@@ -37,24 +37,18 @@
                 $("#btnClear").click(function (event) {
                                 $("#messages").empty();
                                 event.preventDefault();
-                });
-                
-                function createMessageEntry(encodedMsg) {
-                                let entry = document.createElement('div');                            
-                                entry.innerHTML = '<div class="col-md-12 shadow-sm p-3 mb-5 bg-white rounded pull-left">' +
-                                  + encodedMsg +'</div>';                          
-                                return entry;
-                            }
-                
+                });               
+                                
                 function bindConnectionMessage(connection) {
                       let messageCallback = function (message) {
                                     if (!message) return;                                
-                                    let messageEntry = createMessageEntry(message);
+                                    let constructedMessage = '<div class="col-md-12 shadow-sm p-3 mb-5 bg-white rounded pull-left">' 
+                                                                      + message +'</div>';
                                     let messageBox = document.getElementById('messages');
-                                    messageBox.appendChild(messageEntry);
+                                    messageBox.appendChild(constructedMessage);
                                     messageBox.scrollTop = messageBox.scrollHeight;
                       };
-                      connection.on('stats', messageCallback); 
+                      connection.on('messages', messageCallback); 
                 }
                                 
                 function onConnected(connection) {
