@@ -15,9 +15,7 @@
     </button>
 </div>
 <div class="row">
-    <div class="col-md-12"
-         id="messages">
-    </div>
+    <div class="col-md-12" id="currentMessages"></div>
 </div>
 
 @section Scripts
@@ -35,18 +33,19 @@
                           .catch(console.error);
                 
                 $("#btnClear").click(function (event) {
-                                $("#messages").empty();
+                                $("#currentMessages").empty();
                                 event.preventDefault();
                 });               
                                 
                 function bindConnectionMessage(connection) {
                       let messageCallback = function (message) {
-                                    if (!message) return;                                
+                                    console.log(message);
+                                    if (!message) return;
+                                    console.log("Message was received for construction.");
                                     let constructedMessage = '<div class="col-md-12 shadow-sm p-3 mb-5 bg-white rounded pull-left">' 
                                                                       + message +'</div>';
-                                    let messageBox = document.getElementById('messages');
-                                    messageBox.appendChild(constructedMessage);
-                                    messageBox.scrollTop = messageBox.scrollHeight;
+                                    console.log(constructedMessage);                                    
+                                    $("#currentMessages").append(constructedMessage);                                    
                       };
                       connection.on('messages', messageCallback); 
                 }
