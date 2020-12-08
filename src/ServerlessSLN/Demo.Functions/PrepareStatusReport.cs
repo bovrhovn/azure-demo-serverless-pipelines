@@ -53,12 +53,13 @@ namespace Demo.Functions
                                $"<td>Is hosted build engine: {(latestBuild.IsHosted ? "YES" : "NO")}</td>" +
                                $"<td>Start time: {latestBuild.StartTime}</td>" +
                                $"<td>Finish time: {latestBuild.FinishTime}</td></tr>";
-            
+
                 replaced = replaced.Replace("##INFO", table);
                 replaced = replaced.Replace("##FOOTER", $"Generated from Azure Function at {DateTime.Now}");
 
                 //save it to storage account and table
-                log.LogInformation("Switching between containers to serve data from Reports container and to save data");
+                log.LogInformation(
+                    "Switching between containers to serve data from Reports container and to save data");
                 worker.Container = "reports";
 
                 var stream = new MemoryStream();
@@ -67,7 +68,8 @@ namespace Demo.Functions
                 await writer.FlushAsync();
                 stream.Position = 0;
 
-                var latestBuildName = $"{latestBuild.Name} {Guid.NewGuid()}";
+                var latestBuildName = $"{latestBuild.Name}-{Guid.NewGuid()}.html"
+                    .Replace(" ", "");
                 await worker.UploadFileAsync(latestBuildName, stream);
 
                 var fileUrl = await worker.GetFileUrl(latestBuildName, false);
@@ -102,6 +104,7 @@ namespace Demo.Functions
             {
                 log.LogError(e.Message);
             }
+
             return new OkObjectResult("Report has been generated and saved");
         }
     }
