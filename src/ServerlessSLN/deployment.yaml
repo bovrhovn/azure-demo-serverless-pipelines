@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: function  
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      tier: frontend      
+      name: function
+  template:
+    metadata:
+      labels:
+        tier: frontend       
+        name: function
+    spec:
+      containers:
+      - name: function
+        image: demoserverless.azurecr.io/azurefunctionsimage:v1
+        ports:
+         - containerPort: 80  
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"     
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: function  
+spec:
+  type: LoadBalancer
+  selector:
+    tier: frontend
+    name: function
+  ports:
+    - protocol: TCP
+      port: 80
