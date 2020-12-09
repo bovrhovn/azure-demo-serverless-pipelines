@@ -16,17 +16,16 @@ RUN dotnet build "Demo.Interfaces/Demo.Interfaces.csproj" -c Release -o /Demo.Fu
 RUN dotnet build "Demo.Services/Demo.Services.csproj" -c Release -o /Demo.Functions
 RUN dotnet build "Demo.Functions/Demo.Functions.csproj" -c Release -o /app
 
-FROM build AS publish
+FROM installer-env AS publish
 RUN dotnet publish "Demo.Functions/Demo.Functions.csproj" -c Release -o /app
 
 WORKDIR /app
-COPY --from=publish /app .
 RUN cd /app && \
-    mkdir -p /home/site/wwwroot && \
-    dotnet publish *.csproj --output /home/site/wwwroot
-
+    mkdir -p /home/site/wwwroot
+COPY . .
+ 
 FROM mcr.microsoft.com/azure-functions/dotnet:3.0
 ENV AzureWebJobsScriptRoot=/home/site/wwwroot \
     AzureFunctionsJobHost__Logging__Console__IsEnabled=true
 
-COPY --from=installer-env ["/home/site/wwwroot", "/home/site/wwwroot"]
+COPY --from=publish ["/app", "/home/site/wwwroot"]
