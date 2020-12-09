@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs.Extensions.SignalRService;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Moq;
 using Newtonsoft.Json;
@@ -16,14 +15,14 @@ namespace Demo.Functions.Tests
 {
     public class Tests
     {
-        private ILogger logger;
+        private Mock<ILogger> logger;
         private Mock<IStorageWorker> worker;
         private Mock<IDOOperations> doOperations;
         
         [SetUp]
         public void Setup()
         {
-            logger = NullLoggerFactory.Instance.CreateLogger("Tests");
+            logger = new Mock<ILogger>();
             worker = new Mock<IStorageWorker>();
             doOperations = new Mock<IDOOperations>();
         }
@@ -37,7 +36,8 @@ namespace Demo.Functions.Tests
                 worker.Object);
             var result = await prepareStatusReport.RunAsync(mockRequest.Object, 
                 new TestableAsyncCollector<SignalRMessage>(), 
-                new TestableAsyncCollector<CloudQueueMessage>(), logger);
+                new TestableAsyncCollector<CloudQueueMessage>(), 
+                logger.Object);
             
             Assert.IsInstanceOf<NoContentResult>(result);
         }
