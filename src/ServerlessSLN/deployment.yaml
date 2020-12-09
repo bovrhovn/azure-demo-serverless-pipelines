@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: function
-        image: demoserverless.azurecr.io/azurefunctionsimage:v1
+        image: demoserverless.azurecr.io/azurefunctionsimage:latest
         ports:
          - containerPort: 80  
         resources:

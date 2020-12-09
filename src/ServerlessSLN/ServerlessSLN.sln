@@ -15,6 +15,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{374CBD4A-EDAB-4DCF-865F-EBA1DCD5F2B8}"
 ProjectSection(SolutionItems) = preProject
 	Dockerfile = Dockerfile
+	deployment.yaml = deployment.yaml
 EndProjectSection
 EndProject
 Global
